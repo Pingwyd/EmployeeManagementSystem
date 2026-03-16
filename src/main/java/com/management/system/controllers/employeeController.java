@@ -1,5 +1,7 @@
 package com.management.system.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,29 +16,34 @@ public class employeeController {
     employeeService employeeService;
 
     @GetMapping("/all")
-    public List<employee> getEmplooyees(){
-        return employeeService.getEmployees();
+    public ResponseEntity <?> getEmplooyees(){
+        List<employee> temp  = employeeService.getEmployees();
+        return ResponseEntity.ok(temp);
     }
     @GetMapping("/department/{id}")
-    public List<employee> getEmployeeByDepartment(@PathVariable Long id){
-        return  employeeService.getEmployeesByDepartment(id);
+    public ResponseEntity<?> getEmployeeByDepartment(@PathVariable Long id){
+          List<employee> temp = employeeService.getEmployeesByDepartment(id);
+        return ResponseEntity.ok(temp);
     }
 
     @PostMapping
-    public employee addEmployee(@RequestBody employee employee){
-        return employeeService.addEmployee(employee);
+    public ResponseEntity<employee> addEmployee(@RequestBody employee employee){
+        employee saved = employeeService.addEmployee(employee);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @PutMapping("/{id}")
-    public String updateEmployee (@PathVariable Long id, @RequestBody employee employee){
+    public ResponseEntity<?> updateEmployee (@PathVariable Long id, @RequestBody employee employee){
         employeeService.updateEmployee(id,employee);
-        return "Updated Sucessfully";
+        String message =  "Updated Sucessfully";
+        return ResponseEntity.ok(message);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteEmployee(@PathVariable Long id){
+    public ResponseEntity<?> deleteEmployee(@PathVariable Long id){
         employeeService.removeEmployee(id);
-        return "Deleted Successfully";
+        String message =  "Deleted Successfully";
+        return ResponseEntity.ok(message);
     }
 
 
