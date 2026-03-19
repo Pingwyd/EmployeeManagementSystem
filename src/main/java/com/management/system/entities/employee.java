@@ -18,6 +18,7 @@ import lombok.Data;
         private String status;
         private String createdAt;
         private String role;
+        private String password;
 
         @ManyToOne
         @JoinColumn(name = "department_id")
