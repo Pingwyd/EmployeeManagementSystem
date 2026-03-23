@@ -2,11 +2,14 @@ package com.management.system.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 @Table(name = "employee")
-    public class employee {
+    public class Employee {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,13 +19,17 @@ import lombok.Data;
         private String lastName;
         private String email;
         private String status;
-        private String createdAt;
+
         private String role;
         private String password;
 
         @ManyToOne
         @JoinColumn(name = "department_id")
-        private department department;
+        private Department department;
+
+        @CreatedDate
+        @Column(updatable = true)
+        private LocalDateTime createdAt;
     }
 
 
