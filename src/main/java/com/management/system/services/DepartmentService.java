@@ -34,7 +34,6 @@ public class DepartmentService {
         }
 
         Department dept = new Department();
-        dept.setId(departmentRequest.getId());
         dept.setName(departmentRequest.getName());
 
         Department newDept = departmentRepository.save(dept);
@@ -55,7 +54,6 @@ public class DepartmentService {
         }
 
         department.setName(departmentRequestDTO.getName());
-        department.setId(departmentRequestDTO.getId());
 
         Department updatedDept = departmentRepository.save(department);
 

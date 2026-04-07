@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Prosperr/Downloads/system/**)",
+      "Bash(ls -la *.pdf)"
+    ]
+  }
+}
