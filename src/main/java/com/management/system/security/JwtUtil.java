@@ -40,9 +40,9 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String extractID(String token) {
-        return extractClaims(token, Claims::getId);
-    }
+//    public String extractID(String token) {
+//        return extractClaims(token, Claims::getId);
+//    }
 
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);

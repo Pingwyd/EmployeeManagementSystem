@@ -32,6 +32,7 @@ public class AdminController {
         List<EmployeeResponseDTO> temp  = adminService.getEmployees();
         return ResponseEntity.ok(temp);
     }
+
     @GetMapping("/department/{id}")
     public ResponseEntity<?> getEmployeeByDepartment(@PathVariable Long id){
           List<EmployeeResponseDTO> temp = adminService.getEmployeesByDepartment(id);

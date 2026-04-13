@@ -8,13 +8,16 @@ import java.util.List;
 import java.util.Optional;
 
 
+//JPA Specification
+
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee,Long> {
 
     List<Employee> findByDepartment_Id(Long department_Id);
     Optional<Employee> findByEmail(String email);
     boolean existsByEmail(String email);
-    boolean existsByFirstNameAndLastName(String firstName, String lastName);
-    boolean existsByEmailAndEmployeeIdNot(String email, Long id);
-    boolean existsByFirstNameAndLastNameAndEmployeeIdNot(String firstName, String LastName, Long id);
+//    boolean existsByFirstNameAndLastName(String firstName, String lastName);
+//    boolean existsByEmailAndEmployeeIdNot(String email, Long id);
+//    boolean existsByFirstNameAndLastNameAndEmployeeIdNot(String firstName, String LastName, Long id);
+
 }

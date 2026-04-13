@@ -29,7 +29,7 @@ public class AdminService {
         EmployeeResponseDTO dto = new EmployeeResponseDTO();
         dto.setFirstName(employee.getFirstName());
         dto.setLastName(employee.getLastName());
-        dto.setDepartmentName(employee.getDepartment().getName());
+        dto.setDepartmentName(employee.getDepartment() != null ? employee.getDepartment().getName() : null);
         dto.setStatus(employee.getStatus());
         dto.setRole(employee.getRole());
         return dto;
@@ -48,16 +48,6 @@ public class AdminService {
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
 
-    }
-
-    public List<EmployeeResponseDTO> getEmployeesInMyDepartment(String email) {
-        Employee manager = employeeRepository.findByEmail(email).orElseThrow(()-> new RuntimeException( "Employee Not Found"));
-        Long departmentId = manager.getDepartment().getId();
-
-        return employeeRepository.findByDepartment_Id(departmentId)
-                .stream()
-                .map(this:: mapToDTO)
-                .collect(Collectors.toList());
     }
 
     public List<EmployeeResponseDTO> getEmployeesByDepartment(Long departmentId){
@@ -79,9 +69,9 @@ public class AdminService {
 
 
         public EmployeeResponseDTO addEmployee(EmployeeRequestDTO employeeRequest){
-        if (employeeRepository.existsByFirstNameAndLastName(employeeRequest.getFirstName(),employeeRequest.getLastName())){
-                throw new RuntimeException("Employee already exist");
-            }
+//        if (employeeRepository.existsByFirstNameAndLastName(employeeRequest.getFirstName(),employeeRequest.getLastName())){
+//                throw new RuntimeException("Employee already exist");
+//            }
 
         if(employeeRepository.existsByEmail(employeeRequest.getEmail())){
             throw  new RuntimeException("Email already exists");
@@ -117,14 +107,14 @@ public class AdminService {
     public EmployeeResponseDTO updateEmployee(Long id, EmployeeRequestDTO employeeRequest){
 
         Employee employee = employeeRepository.findById(id).orElseThrow();
+// Don't Update email
+//        if (employeeRepository.existsByEmailAndEmployeeIdNot(employeeRequest.getEmail(), employee.getEmployeeId())){
+//            throw new RuntimeException("Email already exists");
+//        }
 
-        if (employeeRepository.existsByEmailAndEmployeeIdNot(employeeRequest.getEmail(), employee.getEmployeeId())){
-            throw new RuntimeException("Email already exists");
-        }
-
-        if(employeeRepository.existsByFirstNameAndLastNameAndEmployeeIdNot(employeeRequest.getFirstName(), employeeRequest.getLastName(), employee.getEmployeeId())){
-            throw new RuntimeException("Employee already exists");
-        }
+//        if(employeeRepository.existsByFirstNameAndLastNameAndEmployeeIdNot(employeeRequest.getFirstName(), employeeRequest.getLastName(), employee.getEmployeeId())){
+//            throw new RuntimeException("Employee already exists");
+//        }
 
         employee.setEmail(employeeRequest.getEmail());
         employee.setRole(employeeRequest.getRole());

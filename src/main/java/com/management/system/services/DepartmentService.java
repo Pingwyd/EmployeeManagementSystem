@@ -5,6 +5,7 @@ import com.management.system.repositories.DepartmentRepository;
 import com.management.system.entities.Department;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,10 +24,24 @@ public class DepartmentService {
                 {
                     DepartmentResponseDTO dto  = new DepartmentResponseDTO();
                     dto.setName(department.getName());
+                    dto.setCreatedAt(department.getCreatedAt());
+                    dto.setUpdatedAt(department.getUpdatedAt());
                     return dto;
                 })
                 .collect(Collectors.toList());
     }
+
+    public DepartmentResponseDTO getDepartmentById(Long id) {
+        Department dept = departmentRepository.findById(id)
+                .orElseThrow(()-> new UsernameNotFoundException("Department Not Found"));
+
+        DepartmentResponseDTO dto = new DepartmentResponseDTO();
+        dto.setName(dept.getName());
+        dto.setCreatedAt(dept.getCreatedAt());
+        dto.setUpdatedAt(dept.getUpdatedAt());
+        return dto;
+    }
+
 
     public DepartmentResponseDTO addDepartment(DepartmentRequestDTO departmentRequest){
         if(departmentRepository.existsByName(departmentRequest.getName())){
@@ -40,6 +55,8 @@ public class DepartmentService {
 
         DepartmentResponseDTO dro = new DepartmentResponseDTO();
         dro.setName(newDept.getName());
+        dro.setCreatedAt(newDept.getCreatedAt());
+        dro.setUpdatedAt(newDept.getUpdatedAt());
 
         return dro;
 
@@ -59,6 +76,8 @@ public class DepartmentService {
 
         DepartmentResponseDTO dro = new DepartmentResponseDTO();
         dro.setName(updatedDept.getName());
+        dro.setCreatedAt(updatedDept.getCreatedAt());
+        dro.setUpdatedAt(updatedDept.getUpdatedAt());
 
         return dro;
     }

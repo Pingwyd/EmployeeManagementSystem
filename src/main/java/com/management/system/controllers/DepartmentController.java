@@ -15,7 +15,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/departments")
+@RequestMapping("/api/admin/departments")
 public class DepartmentController {
 
 
@@ -26,6 +26,12 @@ public class DepartmentController {
         List<DepartmentResponseDTO>  temp=  departmentService.getDepartment();
         return ResponseEntity.ok(temp);
 
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getDepartmentById(@PathVariable Long id){
+        DepartmentResponseDTO temp=  departmentService.getDepartmentById(id);
+        return ResponseEntity.ok(temp);
     }
 
     @PostMapping
