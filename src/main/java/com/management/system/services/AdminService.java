@@ -7,10 +7,12 @@ import com.management.system.entities.Employee;
 import com.management.system.repositories.DepartmentRepository;
 import com.management.system.repositories.EmployeeRepository;
 import com.management.system.security.JwtUtil;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +25,7 @@ public class AdminService {
     final private EmployeeRepository employeeRepository;
     final private PasswordEncoder passwordEncoder;
     final private JwtUtil jwtUtil;
+    final private OtpService otpService;
 
 
     private EmployeeResponseDTO mapToDTO(Employee employee) {
@@ -68,10 +71,7 @@ public class AdminService {
 
 
 
-        public EmployeeResponseDTO addEmployee(EmployeeRequestDTO employeeRequest){
-//        if (employeeRepository.existsByFirstNameAndLastName(employeeRequest.getFirstName(),employeeRequest.getLastName())){
-//                throw new RuntimeException("Employee already exist");
-//            }
+        public EmployeeResponseDTO addEmployee(EmployeeRequestDTO employeeRequest) throws MessagingException {
 
         if(employeeRepository.existsByEmail(employeeRequest.getEmail())){
             throw  new RuntimeException("Email already exists");
@@ -82,6 +82,7 @@ public class AdminService {
         employee.setLastName(employeeRequest.getLastName());
         employee.setRole(employeeRequest.getRole());
         employee.setEmail(employeeRequest.getEmail());
+        employee.setEnabled(false);
         if (employeeRequest.getPassword() == null || employeeRequest.getPassword().isBlank()) {
             throw new RuntimeException("Password is required");
         }
@@ -92,6 +93,9 @@ public class AdminService {
         employee.setDepartment(dept);
 
         Employee savedEmployee = employeeRepository.save(employee);
+
+
+        otpService.sendVerificationCode(savedEmployee.getEmail(), otpService.issueOrRefreshOtp(savedEmployee));
 
         EmployeeResponseDTO responseDTO = new EmployeeResponseDTO();
         responseDTO.setDepartmentName(savedEmployee.getDepartment().getName());
@@ -104,29 +108,24 @@ public class AdminService {
 
     }
 
-    public EmployeeResponseDTO updateEmployee(Long id, EmployeeRequestDTO employeeRequest){
+    public EmployeeResponseDTO updateEmployee(Long id, EmployeeRequestDTO employeeRequest) throws MessagingException {
 
         Employee employee = employeeRepository.findById(id).orElseThrow();
-// Don't Update email
-//        if (employeeRepository.existsByEmailAndEmployeeIdNot(employeeRequest.getEmail(), employee.getEmployeeId())){
-//            throw new RuntimeException("Email already exists");
-//        }
-
-//        if(employeeRepository.existsByFirstNameAndLastNameAndEmployeeIdNot(employeeRequest.getFirstName(), employeeRequest.getLastName(), employee.getEmployeeId())){
-//            throw new RuntimeException("Employee already exists");
-//        }
 
         employee.setEmail(employeeRequest.getEmail());
         employee.setRole(employeeRequest.getRole());
         employee.setFirstName(employeeRequest.getFirstName());
         employee.setLastName(employeeRequest.getLastName());
+
         if (employeeRequest.getPassword() != null && !employeeRequest.getPassword().isBlank()) {
             employee.setPassword(passwordEncoder.encode(employeeRequest.getPassword()));
         }
         Department dept = departmentRepository.findById(employeeRequest.getDepartment_id()).orElseThrow();
         employee.setDepartment(dept);
 
-        employeeRepository.save(employee);
+        Employee savedEmployee = employeeRepository.save(employee);
+        otpService.sendVerificationCode(savedEmployee.getEmail(), otpService.issueOrRefreshOtp(savedEmployee));
+
 
         EmployeeResponseDTO responseDTO = new EmployeeResponseDTO();
         responseDTO.setFirstName(employee.getFirstName());

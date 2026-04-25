@@ -1,12 +1,9 @@
 package com.management.system.controllers;
+
 import com.management.system.dto.DepartmentRequestDTO;
 import com.management.system.dto.DepartmentResponseDTO;
-import com.management.system.entities.Department;
-import com.management.system.repositories.DepartmentRepository;
 import com.management.system.services.DepartmentService;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

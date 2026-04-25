@@ -4,6 +4,7 @@ import com.management.system.dto.EmployeeRequestDTO;
 import com.management.system.dto.EmployeeResponseDTO;
 import com.management.system.services.AdminService;
 import com.management.system.services.EmployeeService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,13 +41,13 @@ public class AdminController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addEmployee(@RequestBody EmployeeRequestDTO employee){
+    public ResponseEntity<?> addEmployee(@RequestBody EmployeeRequestDTO employee) throws MessagingException {
         EmployeeResponseDTO saved = adminService.addEmployee(employee);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateEmployee (@PathVariable Long id, @RequestBody EmployeeRequestDTO employee){
+    public ResponseEntity<?> updateEmployee (@PathVariable Long id, @RequestBody EmployeeRequestDTO employee) throws MessagingException {
         adminService.updateEmployee(id,employee);
         String message =  "Updated Sucessfully";
         return ResponseEntity.ok(message);

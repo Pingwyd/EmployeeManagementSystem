@@ -1,12 +1,11 @@
 package com.management.system.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +19,7 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "employee")
+@EntityListeners(AuditingEntityListener.class)
     public class Employee implements UserDetails{
 
         @Id
@@ -29,19 +29,22 @@ import java.util.List;
         @Enumerated(EnumType.STRING)
         private Role role;
 
+        @ManyToOne
+        @JoinColumn(name = "department_id")
+        private Department department;
+
+        @CreatedDate
+        @Column(nullable = false, updatable = false)
+        private LocalDateTime createdAt;
+
         private String firstName;
         private String lastName;
         private String email;
         private String status;
         private String password;
 
-        @ManyToOne
-        @JoinColumn(name = "department_id")
-        private Department department;
-
-        @CreatedDate
-        @Column(updatable = true)
-        private LocalDateTime createdAt;
+        @Column(nullable = false)
+        private Boolean enabled;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -75,7 +78,7 @@ import java.util.List;
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return enabled;
     }
 }
 

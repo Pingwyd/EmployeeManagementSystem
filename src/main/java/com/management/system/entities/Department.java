@@ -1,11 +1,11 @@
 package com.management.system.entities;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import lombok.Data;
 
 @Entity
 @Data
@@ -17,11 +17,11 @@ public class Department {
     private String name;
 
     @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
+    @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at")
+    @Column(name = "updated_at",nullable = false)
     private LocalDateTime updatedAt;
 
 }
