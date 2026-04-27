@@ -7,6 +7,7 @@ import com.management.system.repositories.EmployeeRepository;
 import com.management.system.repositories.OtpRepository;
 import com.management.system.security.JwtUtil;
 import com.management.system.services.OtpService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
@@ -28,7 +29,7 @@ public class AuthenticationService {
     private final OtpService otpService;
 
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(AuthenticationRequest request) throws MessagingException {
         var employee = employeeRepository.findByEmail(request.getEmail()).orElseThrow();
 
         if (!employee.isEnabled()) {

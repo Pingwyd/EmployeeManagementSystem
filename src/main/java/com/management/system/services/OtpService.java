@@ -1,17 +1,18 @@
 package com.management.system.services;
 
+import com.management.system.dto.OtpDTO;
 import com.management.system.entities.Employee;
 import com.management.system.entities.OTP;
 import com.management.system.repositories.EmployeeRepository;
 import com.management.system.repositories.OtpRepository;
 import jakarta.mail.MessagingException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
-
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
@@ -29,10 +30,12 @@ public class OtpService {
     private final SpringTemplateEngine templateEngine;
 
 
-    public String issueOrRefreshOtp(Employee employee) {
-        OTP otp = otpRepository.findByEmployeeEmployeeId(employee.getEmployeeId()).orElseGet(()->{
+
+    public String issueOrRefreshOtp(OtpDTO otpDTO) {
+        Employee emp = employeeRepository.findById(otpDTO.getId()).orElseThrow(()->new EntityNotFoundException("Employee Not Found"));
+        OTP otp = otpRepository.findByEmployeeEmployeeId(otpDTO.getId()).orElseGet(()->{
             OTP newOtp = new OTP();
-            newOtp.setEmployee(employee);
+            newOtp.setEmployee(emp);
             return newOtp;
 
         });
@@ -70,7 +73,9 @@ public class OtpService {
             if (existingEmployee.isEnabled()) {
                 throw new RuntimeException("Account is Already Verified");
             }
-            String code = issueOrRefreshOtp(existingEmployee);
+            OtpDTO otpDTO = new OtpDTO();
+            otpDTO.setId(existingEmployee.getEmployeeId());
+            String code = issueOrRefreshOtp(otpDTO);
             sendVerificationCode(existingEmployee.getEmail(), code);
         } else {
             throw new RuntimeException("User not Found");

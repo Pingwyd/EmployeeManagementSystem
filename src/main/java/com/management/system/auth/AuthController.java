@@ -26,6 +26,8 @@ public class AuthController {
             return ResponseEntity.ok(service.authenticate(request));
         } catch (DisabledException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
         }
 
     }

@@ -1,30 +1,29 @@
 package com.management.system.services;
 
+import com.management.system.Interfaces.AdminService;
 import com.management.system.dto.EmployeeRequestDTO;
 import com.management.system.dto.EmployeeResponseDTO;
+import com.management.system.dto.OtpDTO;
 import com.management.system.entities.Department;
 import com.management.system.entities.Employee;
 import com.management.system.repositories.DepartmentRepository;
 import com.management.system.repositories.EmployeeRepository;
-import com.management.system.security.JwtUtil;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class AdminService {
+public class AdminServiceImpl implements AdminService {
 
 
     final private DepartmentRepository departmentRepository;
     final private EmployeeRepository employeeRepository;
     final private PasswordEncoder passwordEncoder;
-    final private JwtUtil jwtUtil;
     final private OtpService otpService;
 
 
@@ -39,12 +38,13 @@ public class AdminService {
     }
 
 
+    @Override
     public EmployeeResponseDTO getMyDetails(String email) {
         Employee employee = employeeRepository.findByEmail(email).orElseThrow(()-> new RuntimeException( "Employee Not Found"));
         return mapToDTO(employee);
     }
 
-
+    @Override
     public List<EmployeeResponseDTO> getEmployees(){
         return employeeRepository.findAll()
                 .stream()
@@ -52,25 +52,17 @@ public class AdminService {
                 .collect(Collectors.toList());
 
     }
-
+    @Override
     public List<EmployeeResponseDTO> getEmployeesByDepartment(Long departmentId){
         return employeeRepository.findByDepartment_Id(departmentId)
                 .stream()
-                .map(employee -> {
-                    EmployeeResponseDTO dto = new EmployeeResponseDTO();
-                    dto.setFirstName(employee.getFirstName());
-                    dto.setLastName(employee.getLastName());
-                    dto.setDepartmentName(employee.getDepartment() != null ? employee.getDepartment().getName() : null) ;
-                    dto.setStatus(employee.getStatus());
-                    dto.setRole(employee.getRole());
-                    return dto;
-                })
+                .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
 
 
 
-
+    @Override
         public EmployeeResponseDTO addEmployee(EmployeeRequestDTO employeeRequest) throws MessagingException {
 
         if(employeeRepository.existsByEmail(employeeRequest.getEmail())){
@@ -94,8 +86,10 @@ public class AdminService {
 
         Employee savedEmployee = employeeRepository.save(employee);
 
+        OtpDTO otpDTO = new OtpDTO();
+        otpDTO.setId(savedEmployee.getEmployeeId());
 
-        otpService.sendVerificationCode(savedEmployee.getEmail(), otpService.issueOrRefreshOtp(savedEmployee));
+        otpService.sendVerificationCode(savedEmployee.getEmail(), otpService.issueOrRefreshOtp(otpDTO));
 
         EmployeeResponseDTO responseDTO = new EmployeeResponseDTO();
         responseDTO.setDepartmentName(savedEmployee.getDepartment().getName());
@@ -108,6 +102,7 @@ public class AdminService {
 
     }
 
+    @Override
     public EmployeeResponseDTO updateEmployee(Long id, EmployeeRequestDTO employeeRequest) throws MessagingException {
 
         Employee employee = employeeRepository.findById(id).orElseThrow();
@@ -124,7 +119,11 @@ public class AdminService {
         employee.setDepartment(dept);
 
         Employee savedEmployee = employeeRepository.save(employee);
-        otpService.sendVerificationCode(savedEmployee.getEmail(), otpService.issueOrRefreshOtp(savedEmployee));
+
+        OtpDTO otpDTO = new OtpDTO();
+        otpDTO.setId(savedEmployee.getEmployeeId());
+
+        otpService.sendVerificationCode(savedEmployee.getEmail(), otpService.issueOrRefreshOtp(otpDTO));
 
 
         EmployeeResponseDTO responseDTO = new EmployeeResponseDTO();

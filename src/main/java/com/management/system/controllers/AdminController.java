@@ -2,8 +2,7 @@ package com.management.system.controllers;
 
 import com.management.system.dto.EmployeeRequestDTO;
 import com.management.system.dto.EmployeeResponseDTO;
-import com.management.system.services.AdminService;
-import com.management.system.services.EmployeeService;
+import com.management.system.Interfaces.AdminService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,7 @@ import java.util.List;
 public class AdminController {
 
 
-    private final AdminService adminService;
+  private final AdminService adminService;
 
     @GetMapping("/me")
     public ResponseEntity <EmployeeResponseDTO> getMyDetails(Authentication authentication) {
@@ -47,14 +46,14 @@ public class AdminController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateEmployee (@PathVariable Long id, @RequestBody EmployeeRequestDTO employee) throws MessagingException {
+    public ResponseEntity<String> updateEmployee (@PathVariable Long id, @RequestBody EmployeeRequestDTO employee) throws MessagingException {
         adminService.updateEmployee(id,employee);
-        String message =  "Updated Sucessfully";
+        String message =  "Updated Successfully";
         return ResponseEntity.ok(message);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteEmployee(@PathVariable Long id){
+    public ResponseEntity<String> deleteEmployee(@PathVariable Long id){
         adminService.removeEmployee(id);
         String message =  "Deleted Successfully";
         return ResponseEntity.ok(message);
