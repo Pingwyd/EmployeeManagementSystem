@@ -1,10 +1,10 @@
 package com.management.system.services;
+import com.management.system.Interfaces.DepartmentService;
 import com.management.system.dto.DepartmentRequestDTO;
 import com.management.system.dto.DepartmentResponseDTO;
 import com.management.system.repositories.DepartmentRepository;
 import com.management.system.entities.Department;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class DepartmentService {
+public class DepartmentServiceImpl implements DepartmentService {
 
     final private DepartmentRepository departmentRepository;
 

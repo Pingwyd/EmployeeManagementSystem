@@ -1,21 +1,16 @@
 package com.management.system.services;
 
+import com.management.system.Interfaces.AdminService;
+import com.management.system.Interfaces.EmployeeService;
 import com.management.system.dto.EmployeeResponseDTO;
 import com.management.system.entities.Employee;
-import com.management.system.repositories.DepartmentRepository;
 import com.management.system.repositories.EmployeeRepository;
-import com.management.system.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class ManagerService {
-
+public class EmployeeServiceImpl implements EmployeeService {
 
 
     final private EmployeeRepository employeeRepository;
@@ -36,15 +31,5 @@ public class ManagerService {
         Employee employee = employeeRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Employee Not Found"));
         return mapToDTO(employee);
     }
-
-
-    public List<EmployeeResponseDTO> getEmployeesInMyDepartment(String email) {
-        Employee manager = employeeRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Employee Not Found"));
-        Long departmentId = manager.getDepartment().getId();
-
-        return employeeRepository.findByDepartment_Id(departmentId)
-                .stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
-    }
 }
+

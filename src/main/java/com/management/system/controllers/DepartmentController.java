@@ -1,8 +1,9 @@
 package com.management.system.controllers;
 
+import com.management.system.Interfaces.DepartmentService;
 import com.management.system.dto.DepartmentRequestDTO;
 import com.management.system.dto.DepartmentResponseDTO;
-import com.management.system.services.DepartmentService;
+import com.management.system.services.DepartmentServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,14 +39,14 @@ public class DepartmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateDepartment(@PathVariable Long id, @RequestBody DepartmentRequestDTO department){
+    public ResponseEntity<String> updateDepartment(@PathVariable Long id, @RequestBody DepartmentRequestDTO department){
          departmentService.updateDepartment(id,department);
          String message  = "Updated Successfully";
          return ResponseEntity.ok(message);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteDepartment(@PathVariable Long id){
+    public ResponseEntity<String> deleteDepartment(@PathVariable Long id){
          departmentService.removeDepartment(id);
          String message = "Removed Successfully";
          return ResponseEntity.ok(message);
