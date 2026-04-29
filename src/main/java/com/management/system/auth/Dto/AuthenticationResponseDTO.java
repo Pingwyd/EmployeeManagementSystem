@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class AuthenticationResponseDTO {
+//    private String email;
     private String username;
     private Role role;
     private String department;
