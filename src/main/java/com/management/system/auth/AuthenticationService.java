@@ -47,7 +47,7 @@ public class AuthenticationService {
         return AuthenticationResponseDTO.builder()
                 .username(employee.getUsername())
                 .role(employee.getRole())
-                .department(employee.getDepartment())
+                .department(employee.getDepartment().getName())
                 .token(Jwt)
                 .build();
     }
