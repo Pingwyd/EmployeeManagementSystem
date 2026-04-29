@@ -1,10 +1,11 @@
 package com.management.system.auth;
 
-import com.management.system.auth.Dto.AuthenticationRequestDTO;
-import com.management.system.auth.Dto.AuthenticationResponseDTO;
+import com.management.system.dto.auth.AuthenticationRequestDTO;
+import com.management.system.dto.auth.AuthenticationResponseDTO;
 import com.management.system.dto.Otp.VerifyUserDTO;
 import com.management.system.entities.Employee;
 import com.management.system.entities.OTP;
+import com.management.system.exceptions.BadRequestException;
 import com.management.system.repositories.EmployeeRepository;
 import com.management.system.repositories.OtpRepository;
 import com.management.system.security.JwtUtil;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,6 +31,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final OtpRepository otpRepository;
     private final OtpService otpService;
+    private final PasswordEncoder passwordEncoder;
 
 
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) throws MessagingException {
@@ -55,7 +58,10 @@ public class AuthenticationService {
 
 
 
-    public void verifyUser(VerifyUserDTO dto) {
+    public void verifyUser(VerifyUserDTO dto) throws MessagingException {
+        if(dto.getPassword() == null){
+            throw new BadRequestException("Must Set Password");
+        }
         Optional<Employee> employee = employeeRepository.findByEmail(dto.getEmail());
         if (employee.isPresent()) {
             Employee existingEmployee = employee.get();
@@ -68,6 +74,7 @@ public class AuthenticationService {
                     throw new RuntimeException("Invalid verification code");
                 }
                 if (existingOtp.getOtp().equals(dto.getEmailVerificationCode())) {
+                    existingEmployee.setPassword(passwordEncoder.encode(dto.getPassword()));
                     existingEmployee.setEnabled(true);
                     existingOtp.setOtp(null);
                     existingOtp.setOtp_expiration(null);

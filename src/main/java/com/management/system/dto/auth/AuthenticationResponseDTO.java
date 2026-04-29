@@ -1,7 +1,6 @@
-package com.management.system.auth.Dto;
+package com.management.system.dto.auth;
 
 
-import com.management.system.entities.Department;
 import com.management.system.entities.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

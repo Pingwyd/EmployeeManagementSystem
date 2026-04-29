@@ -79,11 +79,6 @@ public class AdminServiceImpl implements AdminService {
         employee.setRole(employeeRequest.getRole());
         employee.setEmail(employeeRequest.getEmail());
         employee.setEnabled(false);
-        if (employeeRequest.getPassword() == null || employeeRequest.getPassword().isBlank()) {
-            throw new BadRequestException("Password is required");
-        }
-        employee.setPassword(passwordEncoder.encode(employeeRequest.getPassword()));
-        employee.setStatus(employeeRequest.getStatus());
 
         Department dept = departmentRepository.findById(employeeRequest.getDepartment_id()).orElseThrow(()-> new NotFoundException("Department Not Found"));
         employee.setDepartment(dept);

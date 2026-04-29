@@ -18,10 +18,6 @@ public class EmployeeRequestDTO {
     @NotBlank(message = "Email is Required")
     private String email;
 
-    @NotNull
-    @Size(min = 6, message ="Password Must be at least 6 characters" )
-    private String password;
-
     @NotNull(message = "Role is Required")
     private Role role;
 

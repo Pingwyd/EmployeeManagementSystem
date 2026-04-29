@@ -1,6 +1,6 @@
 package com.management.system.auth;
 
-import com.management.system.auth.Dto.AuthenticationRequestDTO;
+import com.management.system.dto.auth.AuthenticationRequestDTO;
 import com.management.system.dto.Otp.ResendVerificationCodeDTO;
 import com.management.system.dto.Otp.VerifyUserDTO;
 import com.management.system.services.Impl.OtpService;
@@ -41,6 +41,8 @@ public class AuthController {
         }
         catch(RuntimeException e){
             return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
         }
     }
 

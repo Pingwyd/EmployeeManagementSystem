@@ -1,4 +1,4 @@
-package com.management.system.exceptions.Dto;
+package com.management.system.dto.exceptions;
 
 import lombok.Data;
 
