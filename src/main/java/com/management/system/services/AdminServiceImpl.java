@@ -1,5 +1,9 @@
 package com.management.system.services;
 
+import com.management.system.dto.UpdateEmployeeRequestDTO;
+import com.management.system.exceptions.BadRequestException;
+import com.management.system.exceptions.ConflictException;
+import com.management.system.exceptions.NotFoundException;
 import com.management.system.Interfaces.AdminService;
 import com.management.system.dto.EmployeeRequestDTO;
 import com.management.system.dto.EmployeeResponseDTO;
@@ -40,7 +44,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public EmployeeResponseDTO getMyDetails(String email) {
-        Employee employee = employeeRepository.findByEmail(email).orElseThrow(()-> new RuntimeException( "Employee Not Found"));
+        Employee employee = employeeRepository.findByEmail(email).orElseThrow(()-> new NotFoundException( "Employee Not Found"));
         return mapToDTO(employee);
     }
 
@@ -66,7 +70,7 @@ public class AdminServiceImpl implements AdminService {
         public EmployeeResponseDTO addEmployee(EmployeeRequestDTO employeeRequest) throws MessagingException {
 
         if(employeeRepository.existsByEmail(employeeRequest.getEmail())){
-            throw  new RuntimeException("Email already exists");
+            throw  new ConflictException("Email already exists");
         }
 
         Employee employee = new Employee();
@@ -76,12 +80,12 @@ public class AdminServiceImpl implements AdminService {
         employee.setEmail(employeeRequest.getEmail());
         employee.setEnabled(false);
         if (employeeRequest.getPassword() == null || employeeRequest.getPassword().isBlank()) {
-            throw new RuntimeException("Password is required");
+            throw new BadRequestException("Password is required");
         }
         employee.setPassword(passwordEncoder.encode(employeeRequest.getPassword()));
         employee.setStatus(employeeRequest.getStatus());
 
-        Department dept = departmentRepository.findById(employeeRequest.getDepartment_id()).orElseThrow();
+        Department dept = departmentRepository.findById(employeeRequest.getDepartment_id()).orElseThrow(()-> new NotFoundException("Department Not Found"));
         employee.setDepartment(dept);
 
         Employee savedEmployee = employeeRepository.save(employee);
@@ -103,20 +107,35 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public EmployeeResponseDTO updateEmployee(Long id, EmployeeRequestDTO employeeRequest) throws MessagingException {
+    public EmployeeResponseDTO updateEmployee(Long id, UpdateEmployeeRequestDTO employeeRequest) throws MessagingException {
 
-        Employee employee = employeeRepository.findById(id).orElseThrow();
+        Employee employee = employeeRepository.findById(id).orElseThrow(()-> new NotFoundException("Employee Not Found"));
 
-        employee.setEmail(employeeRequest.getEmail());
-        employee.setRole(employeeRequest.getRole());
-        employee.setFirstName(employeeRequest.getFirstName());
-        employee.setLastName(employeeRequest.getLastName());
+        if(employeeRequest.getEmail() != null && !employeeRequest.getEmail().isBlank()){
+            employee.setEmail(employeeRequest.getEmail());
+        }
+        if(employeeRequest.getRole() != null ) {
+            employee.setRole(employeeRequest.getRole());
+        }
+        if(employeeRequest.getFirstName() != null && !employeeRequest.getFirstName().isBlank()) {
+            employee.setFirstName(employeeRequest.getFirstName());
+        }
+        if(employeeRequest.getLastName() != null && !employeeRequest.getLastName().isBlank()) {
+            employee.setLastName(employeeRequest.getLastName());
+        }
 
         if (employeeRequest.getPassword() != null && !employeeRequest.getPassword().isBlank()) {
             employee.setPassword(passwordEncoder.encode(employeeRequest.getPassword()));
         }
-        Department dept = departmentRepository.findById(employeeRequest.getDepartment_id()).orElseThrow();
-        employee.setDepartment(dept);
+
+        if(employeeRequest.getDepartment_id() != null) {
+            Department dept = departmentRepository.findById(employeeRequest.getDepartment_id()).orElseThrow(() -> new NotFoundException("Department Not Found"));
+            employee.setDepartment(dept);
+        }
+
+        if(employeeRequest.getStatus() != null && !employeeRequest.getStatus().isBlank()) {
+            employee.setStatus(employeeRequest.getStatus());
+        }
 
         Employee savedEmployee = employeeRepository.save(employee);
 
@@ -127,6 +146,7 @@ public class AdminServiceImpl implements AdminService {
 
 
         EmployeeResponseDTO responseDTO = new EmployeeResponseDTO();
+
         responseDTO.setFirstName(employee.getFirstName());
         responseDTO.setLastName(employee.getLastName());
         responseDTO.setDepartmentName(employee.getDepartment().getName());
@@ -141,6 +161,9 @@ public class AdminServiceImpl implements AdminService {
 
 
     public String removeEmployee(Long id){
+        if(!employeeRepository.existsById(id)){
+            throw new NotFoundException("Employee Not Found");
+        }
         employeeRepository.deleteById(id);
         return "Employee Removed";
     }
