@@ -1,17 +1,17 @@
-package com.management.system.services;
+package com.management.system.services.Impl;
 
-import com.management.system.dto.UpdateEmployeeRequestDTO;
+import com.management.system.dto.Employee.UpdateEmployeeRequestDTO;
 import com.management.system.exceptions.BadRequestException;
 import com.management.system.exceptions.ConflictException;
 import com.management.system.exceptions.NotFoundException;
-import com.management.system.Interfaces.AdminService;
-import com.management.system.dto.EmployeeRequestDTO;
-import com.management.system.dto.EmployeeResponseDTO;
-import com.management.system.dto.OtpDTO;
+import com.management.system.dto.Employee.EmployeeRequestDTO;
+import com.management.system.dto.Employee.EmployeeResponseDTO;
+import com.management.system.dto.Otp.OtpDTO;
 import com.management.system.entities.Department;
 import com.management.system.entities.Employee;
 import com.management.system.repositories.DepartmentRepository;
 import com.management.system.repositories.EmployeeRepository;
+import com.management.system.services.AdminService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

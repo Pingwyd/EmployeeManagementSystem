@@ -1,6 +1,6 @@
-package com.management.system.services;
+package com.management.system.services.Impl;
 
-import com.management.system.dto.OtpDTO;
+import com.management.system.dto.Otp.OtpDTO;
 import com.management.system.entities.Employee;
 import com.management.system.entities.OTP;
 import com.management.system.repositories.EmployeeRepository;

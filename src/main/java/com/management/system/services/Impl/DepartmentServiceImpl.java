@@ -1,9 +1,9 @@
-package com.management.system.services;
-import com.management.system.Interfaces.DepartmentService;
-import com.management.system.dto.DepartmentRequestDTO;
-import com.management.system.dto.DepartmentResponseDTO;
+package com.management.system.services.Impl;
+import com.management.system.dto.Department.DepartmentRequestDTO;
+import com.management.system.dto.Department.DepartmentResponseDTO;
 import com.management.system.repositories.DepartmentRepository;
 import com.management.system.entities.Department;
+import com.management.system.services.DepartmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

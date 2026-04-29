@@ -1,8 +1,8 @@
-package com.management.system.Interfaces;
+package com.management.system.services;
 
-import com.management.system.dto.EmployeeRequestDTO;
-import com.management.system.dto.EmployeeResponseDTO;
-import com.management.system.dto.UpdateEmployeeRequestDTO;
+import com.management.system.dto.Employee.EmployeeRequestDTO;
+import com.management.system.dto.Employee.EmployeeResponseDTO;
+import com.management.system.dto.Employee.UpdateEmployeeRequestDTO;
 import jakarta.mail.MessagingException;
 
 import java.util.List;

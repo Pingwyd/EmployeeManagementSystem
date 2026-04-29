@@ -1,12 +1,14 @@
 package com.management.system.auth;
 
-import com.management.system.dto.VerifyUserDTO;
+import com.management.system.auth.Dto.AuthenticationRequestDTO;
+import com.management.system.auth.Dto.AuthenticationResponseDTO;
+import com.management.system.dto.Otp.VerifyUserDTO;
 import com.management.system.entities.Employee;
 import com.management.system.entities.OTP;
 import com.management.system.repositories.EmployeeRepository;
 import com.management.system.repositories.OtpRepository;
 import com.management.system.security.JwtUtil;
-import com.management.system.services.OtpService;
+import com.management.system.services.Impl.OtpService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +31,7 @@ public class AuthenticationService {
     private final OtpService otpService;
 
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) throws MessagingException {
+    public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) throws MessagingException {
         var employee = employeeRepository.findByEmail(request.getEmail()).orElseThrow();
 
         if (!employee.isEnabled()) {
@@ -42,7 +44,7 @@ public class AuthenticationService {
         );
 
         var Jwt = jwtUtil.generateToken(employee);
-        return AuthenticationResponse.builder()
+        return AuthenticationResponseDTO.builder()
                 .username(employee.getUsername())
                 .role(employee.getRole())
                 .department(employee.getDepartment())

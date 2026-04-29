@@ -1,8 +1,9 @@
 package com.management.system.auth;
 
-import com.management.system.dto.ResendVerificationCodeDTO;
-import com.management.system.dto.VerifyUserDTO;
-import com.management.system.services.OtpService;
+import com.management.system.auth.Dto.AuthenticationRequestDTO;
+import com.management.system.dto.Otp.ResendVerificationCodeDTO;
+import com.management.system.dto.Otp.VerifyUserDTO;
+import com.management.system.services.Impl.OtpService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class AuthController {
     private final OtpService otpService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest request){
+    public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequestDTO request){
         try {
             return ResponseEntity.ok(service.authenticate(request));
         } catch (DisabledException e) {

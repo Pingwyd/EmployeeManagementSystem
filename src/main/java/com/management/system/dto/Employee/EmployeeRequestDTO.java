@@ -1,4 +1,4 @@
-package com.management.system.dto;
+package com.management.system.dto.Employee;
 import com.management.system.entities.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

@@ -1,8 +1,7 @@
 package com.management.system.controllers;
 
-import com.management.system.Interfaces.EmployeeService;
-import com.management.system.dto.EmployeeResponseDTO;
-import com.management.system.services.EmployeeServiceImpl;
+import com.management.system.services.EmployeeService;
+import com.management.system.dto.Employee.EmployeeResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

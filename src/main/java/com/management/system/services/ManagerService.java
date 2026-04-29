@@ -1,6 +1,6 @@
-package com.management.system.Interfaces;
+package com.management.system.services;
 
-import com.management.system.dto.EmployeeResponseDTO;
+import com.management.system.dto.Employee.EmployeeResponseDTO;
 
 import java.util.List;
 

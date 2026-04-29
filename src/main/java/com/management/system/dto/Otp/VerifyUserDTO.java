@@ -1,4 +1,4 @@
-package com.management.system.dto;
+package com.management.system.dto.Otp;
 
 
 import lombok.Data;

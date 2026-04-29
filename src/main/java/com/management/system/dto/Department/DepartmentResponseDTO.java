@@ -1,4 +1,4 @@
-package com.management.system.dto;
+package com.management.system.dto.Department;
 
 import lombok.Data;
 

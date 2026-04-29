@@ -1,5 +1,4 @@
-package com.management.system.dto;
-import com.management.system.entities.Department;
+package com.management.system.dto.Employee;
 import com.management.system.entities.Role;
 import lombok.Data;
 

@@ -1,9 +1,9 @@
 package com.management.system.controllers;
 
-import com.management.system.dto.EmployeeRequestDTO;
-import com.management.system.dto.EmployeeResponseDTO;
-import com.management.system.Interfaces.AdminService;
-import com.management.system.dto.UpdateEmployeeRequestDTO;
+import com.management.system.dto.Employee.EmployeeRequestDTO;
+import com.management.system.dto.Employee.EmployeeResponseDTO;
+import com.management.system.services.AdminService;
+import com.management.system.dto.Employee.UpdateEmployeeRequestDTO;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

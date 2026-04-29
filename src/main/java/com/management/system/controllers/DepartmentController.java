@@ -1,9 +1,8 @@
 package com.management.system.controllers;
 
-import com.management.system.Interfaces.DepartmentService;
-import com.management.system.dto.DepartmentRequestDTO;
-import com.management.system.dto.DepartmentResponseDTO;
-import com.management.system.services.DepartmentServiceImpl;
+import com.management.system.services.DepartmentService;
+import com.management.system.dto.Department.DepartmentRequestDTO;
+import com.management.system.dto.Department.DepartmentResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

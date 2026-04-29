@@ -1,4 +1,4 @@
-package com.management.system.auth;
+package com.management.system.auth.Dto;
 
 
 import com.management.system.entities.Department;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class AuthenticationResponse {
+public class AuthenticationResponseDTO {
     private String username;
     private Role role;
     private Department department;

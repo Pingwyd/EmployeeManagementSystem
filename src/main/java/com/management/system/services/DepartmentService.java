@@ -1,7 +1,7 @@
-package com.management.system.Interfaces;
+package com.management.system.services;
 
-import com.management.system.dto.DepartmentRequestDTO;
-import com.management.system.dto.DepartmentResponseDTO;
+import com.management.system.dto.Department.DepartmentRequestDTO;
+import com.management.system.dto.Department.DepartmentResponseDTO;
 
 import java.util.List;
 
