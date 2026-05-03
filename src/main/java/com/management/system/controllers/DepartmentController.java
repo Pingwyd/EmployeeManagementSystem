@@ -1,5 +1,6 @@
 package com.management.system.controllers;
 
+import com.management.system.dto.Department.UpdateDepartmentRequestDTO;
 import com.management.system.services.DepartmentService;
 import com.management.system.dto.Department.DepartmentRequestDTO;
 import com.management.system.dto.Department.DepartmentResponseDTO;
@@ -38,7 +39,7 @@ public class DepartmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateDepartment(@PathVariable Long id, @RequestBody DepartmentRequestDTO department){
+    public ResponseEntity<String> updateDepartment(@PathVariable Long id, @RequestBody UpdateDepartmentRequestDTO department){
          departmentService.updateDepartment(id,department);
          String message  = "Updated Successfully";
          return ResponseEntity.ok(message);

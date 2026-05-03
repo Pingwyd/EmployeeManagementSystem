@@ -1,6 +1,9 @@
 package com.management.system.services.Impl;
 import com.management.system.dto.Department.DepartmentRequestDTO;
 import com.management.system.dto.Department.DepartmentResponseDTO;
+import com.management.system.dto.Department.UpdateDepartmentRequestDTO;
+import com.management.system.exceptions.ConflictException;
+import com.management.system.exceptions.NotFoundException;
 import com.management.system.repositories.DepartmentRepository;
 import com.management.system.entities.Department;
 import com.management.system.services.DepartmentService;
@@ -33,7 +36,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     public DepartmentResponseDTO getDepartmentById(Long id) {
         Department dept = departmentRepository.findById(id)
-                .orElseThrow(()-> new UsernameNotFoundException("Department Not Found"));
+                .orElseThrow(()-> new NotFoundException("Department Not Found"));
 
         DepartmentResponseDTO dto = new DepartmentResponseDTO();
         dto.setName(dept.getName());
@@ -45,7 +48,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     public DepartmentResponseDTO addDepartment(DepartmentRequestDTO departmentRequest){
         if(departmentRepository.existsByName(departmentRequest.getName())){
-            throw new RuntimeException("Department Already exists");
+            throw new ConflictException("Department Already exists");
         }
 
         Department dept = new Department();
@@ -63,11 +66,11 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     }
 
-    public DepartmentResponseDTO updateDepartment(Long id , DepartmentRequestDTO departmentRequestDTO) {
-        Department department = departmentRepository.findById(id).orElseThrow();
+    public DepartmentResponseDTO updateDepartment(Long id , UpdateDepartmentRequestDTO departmentRequestDTO) {
+        Department department = departmentRepository.findById(id).orElseThrow(()->new NotFoundException("Department not found"));
 
         if (departmentRepository.existsByNameAndIdNot(departmentRequestDTO.getName(), id)){
-            throw new RuntimeException("Department Already Exists");
+            throw new ConflictException("Department Already Exists");
         }
 
         department.setName(departmentRequestDTO.getName());
@@ -83,8 +86,11 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     public String removeDepartment(Long id){
+        if(!departmentRepository.existsById(id)){
+            throw new NotFoundException("Department Not Found");
+        }
         departmentRepository.deleteById(id);
-        return "Removed Successfully";
+        return "Department Removed";
     }
 
 

@@ -2,6 +2,7 @@ package com.management.system.services.Impl;
 
 import com.management.system.dto.Employee.EmployeeResponseDTO;
 import com.management.system.entities.Employee;
+import com.management.system.exceptions.NotFoundException;
 import com.management.system.repositories.EmployeeRepository;
 import com.management.system.services.ManagerService;
 import lombok.RequiredArgsConstructor;
@@ -31,13 +32,13 @@ public class ManagerServiceImpl implements ManagerService {
 
 
     public EmployeeResponseDTO getMyDetails(String email) {
-        Employee employee = employeeRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Employee Not Found"));
+        Employee employee = employeeRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Employee Not Found"));
         return mapToDTO(employee);
     }
 
 
     public List<EmployeeResponseDTO> getEmployeesInMyDepartment(String email) {
-        Employee manager = employeeRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Employee Not Found"));
+        Employee manager = employeeRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Employee Not Found"));
         Long departmentId = manager.getDepartment().getId();
 
         return employeeRepository.findByDepartment_Id(departmentId)

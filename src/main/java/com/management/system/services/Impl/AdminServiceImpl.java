@@ -56,6 +56,7 @@ public class AdminServiceImpl implements AdminService {
                 .collect(Collectors.toList());
 
     }
+
     @Override
     public List<EmployeeResponseDTO> getEmployeesByDepartment(Long departmentId){
         return employeeRepository.findByDepartment_Id(departmentId)
@@ -142,11 +143,11 @@ public class AdminServiceImpl implements AdminService {
 
         EmployeeResponseDTO responseDTO = new EmployeeResponseDTO();
 
-        responseDTO.setFirstName(employee.getFirstName());
-        responseDTO.setLastName(employee.getLastName());
-        responseDTO.setDepartmentName(employee.getDepartment().getName());
-        responseDTO.setRole(employee.getRole());
-        responseDTO.setStatus(employee.getStatus());
+        responseDTO.setFirstName(savedEmployee.getFirstName());
+        responseDTO.setLastName(savedEmployee.getLastName());
+        responseDTO.setDepartmentName(savedEmployee.getDepartment().getName());
+        responseDTO.setRole(savedEmployee.getRole());
+        responseDTO.setStatus(savedEmployee.getStatus());
 
 
         return responseDTO;
