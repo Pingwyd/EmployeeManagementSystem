@@ -80,6 +80,7 @@ public class AdminServiceImpl implements AdminService {
         employee.setRole(employeeRequest.getRole());
         employee.setEmail(employeeRequest.getEmail());
         employee.setEnabled(false);
+        employee.setStatus(employeeRequest.getStatus());
 
         Department dept = departmentRepository.findById(employeeRequest.getDepartment_id()).orElseThrow(()-> new NotFoundException("Department Not Found"));
         employee.setDepartment(dept);

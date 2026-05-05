@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
-@Builder
+//@Builder
 @Data
 public class EmployeeRequestDTO {
     @NotBlank(message = "First Name is Required")

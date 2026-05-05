@@ -60,8 +60,8 @@ public class GlobalExceptionHandler {
         ErrorResponseDTO err = new ErrorResponseDTO();
         err.setTimestamp(OffsetDateTime.now());
         err.setStatus(500);
-//        err.setError(ex.getMessage());
-        err.setError("Internal Server Error");
+        err.setError(ex.getMessage());
+//        err.setError("Internal Server Error");
         err.setMessage("Something went wrong");
         err.setPath(request.getRequestURI());
         err.setFieldErrors(null);

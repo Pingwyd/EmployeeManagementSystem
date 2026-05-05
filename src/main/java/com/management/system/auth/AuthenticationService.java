@@ -48,7 +48,6 @@ public class AuthenticationService {
 
         var Jwt = jwtUtil.generateToken(employee);
         return AuthenticationResponseDTO.builder()
-//                .email(employee.getEmail())
                 .username(employee.getFirstName())
                 .role(employee.getRole())
                 .department(employee.getDepartment().getName())

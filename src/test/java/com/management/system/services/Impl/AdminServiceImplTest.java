@@ -50,10 +50,6 @@ class AdminServiceImplTest {
     @InjectMocks
     private AdminServiceImpl adminService;      //Class to test
 
-
-
-
-
     private final Long id = 2L;
 
 
@@ -168,7 +164,6 @@ class AdminServiceImplTest {
             when(employeeRepository.existsByEmail(testEmployeeRequestDTO.getEmail())).thenReturn(false);
             when(departmentRepository.findById(id)).thenReturn(Optional.of(testDepartment));
             when(employeeRepository.save(any(Employee.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
 
             EmployeeResponseDTO result = adminService.addEmployee(testEmployeeRequestDTO);
 
