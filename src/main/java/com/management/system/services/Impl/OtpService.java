@@ -53,8 +53,10 @@ public class OtpService {
         public void sendVerificationCode(String email , String verificationCode) throws MessagingException {
 
         String subject = "Email Verification";
+        String expiration_Time = "15 Minutes";
         Context context = new Context();
         context.setVariable("VerificationCode",verificationCode);
+        context.setVariable("ExpirationTime",expiration_Time);
 
         String htmlContent = templateEngine.process("OtpEmailTemplate", context);
 
