@@ -55,25 +55,24 @@ class AdminServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        this.testEmployeeRequestDTO = EmployeeRequestDTO.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .status("ACTIVE")
-                .email("Test@gmail.com")
-                .role(Role.ADMIN)
-                .department_id(2L)
-                .build();
+//        this.testEmployeeRequestDTO = EmployeeRequestDTO.builder()
+        this.testEmployeeRequestDTO = new EmployeeRequestDTO();
+                testEmployeeRequestDTO.setFirstName("John");
+                testEmployeeRequestDTO.setLastName("Doe");
+                testEmployeeRequestDTO.setEmail("Test@gmail.com");
+                testEmployeeRequestDTO.setStatus("Active");
+                testEmployeeRequestDTO.setRole(Role.ADMIN);
+                testEmployeeRequestDTO.setDepartment_id(2L);
 
+//        this.testUpdateEmployeeRequestDTO = UpdateEmployeeRequestDTO.builder()
+        this.testUpdateEmployeeRequestDTO = new UpdateEmployeeRequestDTO();
 
-        this.testUpdateEmployeeRequestDTO = UpdateEmployeeRequestDTO.builder()
-                .firstName("Jane")
-                .lastName("Mary")
-                .status("ACTIVE")
-                .email("Test@gmail.com")
-                .role(Role.ADMIN)
-                .department_id(2L)
-                .build();
-
+        testUpdateEmployeeRequestDTO.setFirstName("Jane");
+        testUpdateEmployeeRequestDTO.setLastName("Mary");
+        testUpdateEmployeeRequestDTO.setEmail("Test@gmail.com");
+        testUpdateEmployeeRequestDTO.setStatus("Active");
+        testUpdateEmployeeRequestDTO.setRole(Role.ADMIN);
+        testUpdateEmployeeRequestDTO.setDepartment_id(2L);
 
         this.testEmployee = new Employee();
         testEmployee.setFirstName("John");
@@ -84,12 +83,9 @@ class AdminServiceImplTest {
         testEmployee.setRole(Role.ADMIN);
         testEmployee.setDepartment(testDepartment);
 
-
         this.testDepartment = new Department();
         testDepartment.setId(2L);
         testDepartment.setName("Maths");
-
-
 
     }
 
