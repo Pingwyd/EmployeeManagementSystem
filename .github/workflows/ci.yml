@@ -21,7 +21,7 @@ jobs:
           cache: maven
 
       - name: Build and test
-        run: mvn -B clean verify
+        run: mvn -B -Djwt.secret=ci-secret clean verify
 
       - name: Upload JAR artifact
         if: success()
