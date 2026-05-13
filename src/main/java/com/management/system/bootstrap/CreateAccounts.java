@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
@@ -25,8 +26,11 @@ public class CreateAccounts implements CommandLineRunner {
 
         Department temp = new Department();
         temp.setName("Operations");
+        // ensure timestamps are set for DB constraints during bootstrap
+        temp.setCreatedAt(LocalDateTime.now());
+        temp.setUpdatedAt(LocalDateTime.now());
 
-        Department defaultDept = departmentRepository.findByName("Operations").orElseGet(()-> departmentRepository.save(temp));
+        Department defaultDept = departmentRepository.findByName("Operations").orElseGet(() -> departmentRepository.save(temp));
 
         seedAdmin(defaultDept);
         seedManager(defaultDept);
