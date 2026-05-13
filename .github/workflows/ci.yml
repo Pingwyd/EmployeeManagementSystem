@@ -23,7 +23,7 @@ jobs:
       - name: Build and test
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        run: mvn -B -Djwt.secret=${{ secrets.JWT_SECRET }} clean verify
+        run: mvn -B -Djwt.secret=${JWT_SECRET:-ci-secret} clean verify
 
       - name: Upload JAR artifact
         if: success()
