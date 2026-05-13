@@ -102,7 +102,7 @@ class DepartmentServiceImplTest {
 
             when(departmentRepository.findById(any())).thenReturn(Optional.of(new Department()));
 
-            List<DepartmentResponseDTO> dto = departmentService.getDepartment();
+            DepartmentResponseDTO dto = departmentService.getDepartmentById(deptID);
 
             assertNotNull(dto);
             log.info(dto.toString());
