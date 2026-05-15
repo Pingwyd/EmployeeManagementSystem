@@ -6,6 +6,7 @@ name: Release
 on:
   push:
     branches:
+      - 'develop'
       - 'release/**'
   workflow_dispatch:
     inputs:
@@ -38,8 +39,6 @@ jobs:
           if [ -z "$JAR" ]; then echo "No JAR found" >&2; exit 1; fi
           echo "JAR_PATH=$JAR" >> $GITHUB_ENV
           cp "$JAR" release-app.jar
-          # make a well-known name `app.jar` so Dockerfile COPY app.jar works
-          cp release-app.jar app.jar
 
       - name: Determine tag name
         run: |

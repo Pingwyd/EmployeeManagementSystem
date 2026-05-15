@@ -1,9 +1,17 @@
+FROM maven:3.9.9-eclipse-temurin-25 AS build
+
+WORKDIR /workspace
+
+COPY pom.xml .
+COPY src ./src
+
+RUN mvn -B -DskipTests package
+
 FROM eclipse-temurin:25-jre
 
 WORKDIR /app
 
-# Copy the application JAR into the image. CI will place the JAR as `app.jar` before building.
-COPY app.jar /app/app.jar
+COPY --from=build /workspace/target/*.jar /app/app.jar
 
 EXPOSE 8080
 
