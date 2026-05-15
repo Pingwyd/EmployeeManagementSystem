@@ -79,7 +79,8 @@ jobs:
 
 
 
-      - name: Run tests and package
+      - name: Run tests and package (Linux/Mac)
+        if: matrix.os != 'windows-latest'
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: |
@@ -87,6 +88,18 @@ jobs:
           mvn -B -Djwt.secret=$JWT_SECRET clean verify
           SHA=$(git rev-parse --short HEAD)
           mvn -B -Dproject.build.finalName=${{ github.event.repository.name }}-${SHA} -Djwt.secret=$JWT_SECRET -DskipTests package
+
+      - name: Run tests and package (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: |
+          git fetch --unshallow || true
+          mvn -B -Djwt.secret=$env:JWT_SECRET clean verify
+          $SHA = (git rev-parse --short HEAD)
+          $finalName = "${{ github.event.repository.name }}-$SHA"
+          mvn -B -Dproject.build.finalName=$finalName -Djwt.secret=$env:JWT_SECRET -DskipTests package
 
 
       # - name: Build and test
