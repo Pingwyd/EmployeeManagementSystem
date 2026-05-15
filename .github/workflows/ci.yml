@@ -1,5 +1,8 @@
-name: Java CI with Maven
+permissions:
+  contents: read
+  packages: write
 
+name: Java CI with Maven
 on:
   push:
     branches: ["main", "master"]
@@ -8,26 +11,131 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        java: ['25']
+    runs-on: ${{ matrix.os }}
+
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
 
       - name: Set up JDK 25
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '25'
-          cache: maven
+          java-version: ${{ matrix.java }}
+          
+      - name: Cache Maven(Linux/Mac)
+        if: matrix.os != 'windows-latest'
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
 
-      - name: Build and test
+
+      - name: Cache Maven (Windows)
+        if: matrix.os == 'windows-latest'
+        uses: actions/cache@v4
+        with:
+          path:  ${{ env.USERPROFILE }}\\.m2\\repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+
+
+
+      - name: Create test props (Linux/Mac)
+        if: matrix.os != 'windows-latest'
+        run: |
+          mkdir -p src/test/resources
+          cat > src/test/resources/application.properties <<'EOF'
+          jwt.secret=${{ secrets.JWT_SECRET }}
+          jwt.expiration=3600000
+          spring.mail.username=test@example.com
+          spring.mail.password=testpass
+          spring.mail.host=localhost
+          spring.mail.port=1025
+          EOF
+
+
+      - name: Create test props (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path src/test/resources
+          @'
+          jwt.secret=${{ secrets.JWT_SECRET }}
+          jwt.expiration=3600000
+          spring.mail.username=test@example.com
+          spring.mail.password=testpass
+          spring.mail.host=localhost
+          spring.mail.port=1025
+          '@ | Set-Content -Path src\test\resources\application.properties -NoNewline
+
+
+
+      - name: Run tests and package
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        run: mvn -B -Djwt.secret=${JWT_SECRET:-ci-secret} clean verify
+        run: |
+          git fetch --unshallow || true
+          mvn -B -Djwt.secret=$JWT_SECRET clean verify
+          SHA=$(git rev-parse --short HEAD)
+          mvn -B -Dproject.build.finalName=${{ github.event.repository.name }}-${SHA} -Djwt.secret=$JWT_SECRET -DskipTests package
 
-      - name: Upload JAR artifact
-        if: success()
+
+      # - name: Build and test
+      #   env:
+      #     JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      #   run: mvn -B -Djwt.secret=${{secrets.JWT_SECRET}} clean verify
+
+
+      - name: Upload canonical JAR artifact(single)
+        if: matrix.os == 'ubuntu-latest' && success()
         uses: actions/upload-artifact@v4
         with:
           name: app-jar
           path: target/*.jar
+
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download canonical artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-jar
+          path: target
+
+      - name: Create Maven settings.xml for GitHub Packages
+        run: |
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml <<'EOF'
+          <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+            <servers>
+              <server>
+                <id>github</id>
+                <username>${{ github.actor }}</username>
+                <password>${{ secrets.PERSONAL_TOKEN }}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
+
+      - name: Publish artifact to GitHub Packages
+        run: |
+          JAR=$(ls target/*.jar | head -n 1)
+          mvn -B deploy:deploy-file \
+            -Dfile="$JAR" \
+            -DpomFile=pom.xml \
+            -Durl=https://maven.pkg.github.com/Pingwyd/EmployeeManagementSystem \
+            -DrepositoryId=github \
+            -Dpackaging=jar

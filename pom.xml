@@ -1,4 +1,4 @@
-	<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -31,6 +31,25 @@
 		<mockito.version>5.23.0</mockito.version>
 		<lombok.version>1.18.38</lombok.version>
 	</properties>
+
+
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub Pingwyd Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/Pingwyd/EmployeeManagementSystem</url>
+		</repository>
+		<!-- optional snapshot repository -->
+		<snapshotRepository>
+			<id>github</id>
+			<name>GitHub Pingwyd Snapshot Repository</name>
+			<url>https://maven.pkg.github.com/Pingwyd/EmployeeManagementSystem</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+
+
+
 	<dependencies>
 
 		<dependency>
