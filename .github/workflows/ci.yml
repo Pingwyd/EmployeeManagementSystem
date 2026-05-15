@@ -202,7 +202,8 @@ jobs:
 
       - name: Normalize owner to lowercase
         run: |
-          echo "OWNER_LOWER=$(echo \"${GITHUB_REPOSITORY_OWNER}\" | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+          OWNER_LOWER=$(echo "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')
+          echo "OWNER_LOWER=$OWNER_LOWER" >> $GITHUB_ENV
 
       - name: Build and push image to GHCR
         uses: docker/build-push-action@v4
