@@ -178,7 +178,20 @@ jobs:
       - name: Prepare JAR for image
         run: |
           ls -la
-          mv target/*.jar app.jar
+          # Prefer target/*.jar, fall back to any jar in repo, or search recursively
+          if compgen -G "target/*.jar" > /dev/null; then
+            mv target/*.jar app.jar
+          elif compgen -G "*.jar" > /dev/null; then
+            mv *.jar app.jar
+          else
+            JAR=$(find . -type f -name '*.jar' | head -n 1)
+            if [ -n "$JAR" ]; then
+              mv "$JAR" app.jar
+            else
+              echo "No JAR file found after downloading artifact" >&2
+              exit 1
+            fi
+          fi
 
       - name: Log in to GHCR
         uses: docker/login-action@v2
