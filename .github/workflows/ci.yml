@@ -200,6 +200,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Normalize owner to lowercase
+        run: |
+          echo "OWNER_LOWER=$(echo \"${GITHUB_REPOSITORY_OWNER}\" | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       - name: Build and push image to GHCR
         uses: docker/build-push-action@v4
         with:
@@ -207,5 +211,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ (github.repository_owner) }}/employee-management-system:${{ github.sha }}
-            ghcr.io/${{ (github.repository_owner) }}/employee-management-system:latest
+            ghcr.io/${{ env.OWNER_LOWER }}/employee-management-system:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LOWER }}/employee-management-system:latest
