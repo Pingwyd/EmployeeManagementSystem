@@ -96,10 +96,11 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: |
           git fetch --unshallow || true
-          mvn -B -Djwt.secret=$env:JWT_SECRET clean verify
+          # run mvn with quoted -D properties so PowerShell passes them correctly
+          & mvn -B "-Djwt.secret=$env:JWT_SECRET" clean verify
           $SHA = (git rev-parse --short HEAD)
           $finalName = "${{ github.event.repository.name }}-$SHA"
-          mvn -B -Dproject.build.finalName=$finalName -Djwt.secret=$env:JWT_SECRET -DskipTests package
+          & mvn -B "-Dproject.build.finalName=$finalName" "-Djwt.secret=$env:JWT_SECRET" -DskipTests package
 
 
       # - name: Build and test
